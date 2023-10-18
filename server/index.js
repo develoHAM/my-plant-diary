@@ -7,6 +7,7 @@ import plantRouter from './routes/plants.js';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname, extname, basename } from 'path';
+import path from 'path';
 
 const app = express();
 const PORT = 3000;
@@ -32,12 +33,22 @@ app.use(
 		credentials: true,
 	})
 );
-app.use('/public', express.static(__dirname + '/public'));
+app.use('/', express.static(path.join(__dirname, '../client/build')));
+app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/user', upload.single('file'), userRouter);
 app.use('/plants', plantRouter);
-app.use('*', (req, res) => {
-	res.send({ result: false, message: '올바른 접근이 아닙니다.' });
+
+app.get('/', function (req, res) {
+	res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
+
+app.get('*', function (req, res) {
+	res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
+// app.use('*', (req, res) => {
+// 	res.send({ result: false, message: '올바른 접근이 아닙니다.' });
+// });
 
 db.sequelize.sync({ force: false }).then(() => {
 	app.listen(PORT, () => {

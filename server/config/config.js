@@ -1,9 +1,9 @@
 const Config = {
 	development: {
-		username: 'visitor',
-		password: '1234',
+		username: 'admin',
+		password: '12341234',
 		database: 'my-plant-diary',
-		host: '127.0.0.1',
+		host: 'my-plant-diary.crlsht4xwcw6.ap-northeast-2.rds.amazonaws.com',
 		dialect: 'mysql',
 	},
 	test: {
