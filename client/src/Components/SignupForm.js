@@ -22,7 +22,7 @@ export default function SignupForm() {
 	} = useForm({ mode: 'onChange' });
 
 	const signup = async (data) => {
-		const response = await Axios.post('http://localhost:8000/user/signup', data, {
+		const response = await Axios.post('my-plant-diary-server:8000/user/signup', data, {
 			withCredentials: true,
 		});
 		const { result, message, userInfo } = response.data;

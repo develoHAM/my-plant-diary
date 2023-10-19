@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { __LoginWrapper, __LoginContainer, __Logo } from '../styles/components/welcome';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import axios from 'axios';
 
 export default function Welcome() {
 	const UserState = useSelector((state) => state.loginSlice);

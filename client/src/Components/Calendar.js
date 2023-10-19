@@ -36,10 +36,11 @@ export default function MyCalendar() {
 		console.log('UserState', UserState);
 		const authenticateUser = async () => {
 			const response = await axios.post(
-				'http://localhost:8000/user/authenticate',
+				'my-plant-diary-server:8000/user/authenticate',
 				{ userInfo: UserState.userInfo },
 				{ withCredentials: true }
 			);
+
 			const { result, message, userInfo } = response.data;
 			console.log(response.data);
 
@@ -72,7 +73,7 @@ export default function MyCalendar() {
 		formData.append('file', file);
 		const response = await axios({
 			method: 'POST',
-			url: 'http://localhost:8000/user/submitpost',
+			url: 'my-plant-diary-server:8000/user/submitpost',
 			data: formData,
 			headers: {
 				'Content-Type': 'multipart/form-data',
