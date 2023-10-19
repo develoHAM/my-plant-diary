@@ -7,7 +7,7 @@ export default function Header() {
 				<__Nav>
 					<__NavGroup>
 						<__NavItem>
-							<__NavLink to={'/'}>Plant Diary</__NavLink>
+							<__NavLink to={'/'}>My Plant Diary</__NavLink>
 						</__NavItem>
 						<__NavItem>
 							<__NavLink to={'/calendar'}>Calendar</__NavLink>

@@ -20,7 +20,7 @@ db.Users = UserModel(sequelize, Sequelize);
 db.Plants = PlantModel(sequelize, Sequelize);
 db.Posts = PostModel(sequelize, Sequelize);
 
-db.Users.hasMany(db.Posts, { foreignKey: 'userId' });
-db.Posts.belongsTo(db.Users, { foreignKey: 'userId' });
+db.Users.hasMany(db.Posts, { foreignKey: 'user_id' });
+db.Posts.belongsTo(db.Users, { foreignKey: 'user_id' });
 
 export default db;

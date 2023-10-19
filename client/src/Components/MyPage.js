@@ -10,7 +10,8 @@ export default function MyPage() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const UserState = useSelector((state) => state.loginSlice);
-	const UserInfo = UserState.userInfo;
+	const UserInfo = UserState.userInfo.account;
+	const [pageLoaded, setPageLoaded] = useState(false);
 	const [file, setFile] = useState(null);
 	const [path, setPath] = useState(null);
 	const [isEditing, setIsEditing] = useState({ name: false, email: false, userid: false, password: false });
@@ -28,7 +29,7 @@ export default function MyPage() {
 		const authenticateUser = async () => {
 			const response = await axios.post(
 				'http://localhost:8000/user/authenticate',
-				{ userInfo: UserState.userInfo },
+				{ userInfo: UserInfo },
 				{ withCredentials: true }
 			);
 			const { result, message, userInfo } = response.data;
@@ -38,8 +39,9 @@ export default function MyPage() {
 				navigate('/welcome');
 				return;
 			}
+			setPageLoaded(true);
 			dispatch(loginAction.login(userInfo));
-			setPath(`http://localhost:8000/${userInfo.profile_pic}`);
+			setPath(userInfo.account.profile_pic);
 		};
 		authenticateUser();
 	}, []);
@@ -58,9 +60,13 @@ export default function MyPage() {
 			},
 		});
 		const { result, message, userInfo } = data;
-		console.log('userInfo', userInfo);
-		dispatch(loginAction.login(userInfo));
-		// setPath(`http://localhost:8000/${userInfo.profile_pic}`);
+		if (result) {
+			console.log('userInfo', userInfo);
+			dispatch(loginAction.login(userInfo));
+			setPath(userInfo.account.profile_pic);
+		} else {
+			console.log(message);
+		}
 	};
 
 	const submitUpdateUserInfo = async (data, event) => {
@@ -91,165 +97,178 @@ export default function MyPage() {
 		newEditingState[target] = !isEditing[target];
 		setIsEditing(newEditingState);
 	};
-
 	return (
-		<__MyPageWrapper>
-			<div>
-				<h1>내 프로필</h1>
-				<div>
+		<>
+			{pageLoaded && (
+				<__MyPageWrapper>
 					<div>
-						<img src={`http://localhost:8000/${UserState.userInfo.profile_pic}`} />
+						<h1>내 프로필</h1>
+						<div>
+							<div>
+								<img src={path} />
+							</div>
+							<div>
+								<form encType='multipart/form-data' onSubmit={updateProfilePic}>
+									<input
+										type='file'
+										name='file'
+										onChange={(event) => setFile(event.target.files[0])}
+									/>
+									<button type='submit'>업로드</button>
+								</form>
+							</div>
+							<div>
+								<div>
+									<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
+										<label>이름:</label>
+										{isEditing.name ? (
+											<div>
+												<input
+													type='text'
+													name='name'
+													{...register('name', {
+														value: UserInfo.name,
+														required: '이름이 유효하지 않습니다',
+														pattern: {
+															value: /^[가-힣]{2,4}(?:\s[가-힣]{2,4})?$/,
+															message: '이름이 유효하지 않습니다.',
+														},
+													})}
+												/>
+												<p>{errors.name?.message}</p>
+												<button type='submit' disabled={errors.name}>
+													변경 완료
+												</button>
+												<button type='button' onClick={(event) => toggleEdit(event, 'name')}>
+													취소
+												</button>
+											</div>
+										) : (
+											<div>
+												<span>{UserInfo.name}</span>
+												<button type='button' onClick={(event) => toggleEdit(event, 'name')}>
+													변경
+												</button>
+											</div>
+										)}
+									</form>
+								</div>
+								<div>
+									<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
+										<label>아이디:</label>
+										{isEditing.userid ? (
+											<div>
+												<input
+													type='text'
+													name='userid'
+													{...register('userid', {
+														value: UserInfo.userid,
+														required: '영문, 숫자를 조합하여 입력해주세요. (8-20자)',
+														pattern: {
+															value: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/,
+															message: '영문, 숫자를 조합하여 입력해주세요. (8-20자)',
+														},
+													})}
+												/>
+												<p>{errors.userid?.message}</p>
+												<button type='submit' disabled={errors.userid}>
+													변경 완료
+												</button>
+												<button type='button' onClick={(event) => toggleEdit(event, 'userid')}>
+													취소
+												</button>
+											</div>
+										) : (
+											<div>
+												<span>{UserInfo.userid}</span>
+												<button type='button' onClick={(event) => toggleEdit(event, 'userid')}>
+													변경
+												</button>
+											</div>
+										)}{' '}
+									</form>
+								</div>
+								<div>
+									<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
+										<label>비밀번호:</label>
+										{isEditing.password ? (
+											<div>
+												<input
+													type='password'
+													name='password'
+													{...register('password', {
+														required:
+															'영문, 숫자, 특수문자를 조합해서 입력해주세요. (8-16자)',
+														pattern: {
+															value: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!])[A-Za-z\d@#$%^&+=!]{8,16}$/,
+															message:
+																'영문, 숫자, 특수문자를 조합해서 입력해주세요. (8-16자)',
+														},
+													})}
+												/>
+												<p>{errors.password?.message}</p>
+												<button type='submit' disabled={errors.password}>
+													변경 완료
+												</button>
+												<button
+													type='button'
+													onClick={(event) => toggleEdit(event, 'password')}>
+													취소
+												</button>
+											</div>
+										) : (
+											<div>
+												<span>비번비번</span>
+												<button
+													type='button'
+													onClick={(event) => toggleEdit(event, 'password')}>
+													변경
+												</button>
+											</div>
+										)}{' '}
+									</form>
+								</div>
+								<div>
+									<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
+										<label>이메일:</label>
+										{isEditing.email ? (
+											<div>
+												<input
+													type='text'
+													name='email'
+													{...register('email', {
+														value: UserInfo.email,
+														required: '이메일 주소를 정확히 입력해주세요.',
+														pattern: {
+															value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/,
+															message: '이메일 주소를 정확히 입력해주세요.',
+														},
+													})}
+												/>
+												<p>{errors.email?.message}</p>
+												<button type='submit' disabled={errors.email}>
+													변경 완료
+												</button>
+												<button type='button' onClick={(event) => toggleEdit(event, 'email')}>
+													취소
+												</button>
+											</div>
+										) : (
+											<div>
+												<span>{UserInfo.email}</span>
+												<button type='button' onClick={(event) => toggleEdit(event, 'email')}>
+													변경
+												</button>
+											</div>
+										)}{' '}
+									</form>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div>
-						<form encType='multipart/form-data' onSubmit={updateProfilePic}>
-							<input type='file' name='file' onChange={(event) => setFile(event.target.files[0])} />
-							<button type='submit'>업로드</button>
-						</form>
-					</div>
-					<div>
-						<div>
-							<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
-								<label>이름:</label>
-								{isEditing.name ? (
-									<div>
-										<input
-											type='text'
-											name='name'
-											{...register('name', {
-												value: UserInfo.name,
-												required: '이름이 유효하지 않습니다',
-												pattern: {
-													value: /^[가-힣]{2,4}(?:\s[가-힣]{2,4})?$/,
-													message: '이름이 유효하지 않습니다.',
-												},
-											})}
-										/>
-										<p>{errors.name?.message}</p>
-										<button type='submit' disabled={errors.name}>
-											변경 완료
-										</button>
-										<button type='button' onClick={(event) => toggleEdit(event, 'name')}>
-											취소
-										</button>
-									</div>
-								) : (
-									<div>
-										<span>{UserInfo.name}</span>
-										<button type='button' onClick={(event) => toggleEdit(event, 'name')}>
-											변경
-										</button>
-									</div>
-								)}
-							</form>
-						</div>
-						<div>
-							<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
-								<label>아이디:</label>
-								{isEditing.userid ? (
-									<div>
-										<input
-											type='text'
-											name='userid'
-											{...register('userid', {
-												value: UserInfo.userid,
-												required: '영문, 숫자를 조합하여 입력해주세요. (8-20자)',
-												pattern: {
-													value: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/,
-													message: '영문, 숫자를 조합하여 입력해주세요. (8-20자)',
-												},
-											})}
-										/>
-										<p>{errors.userid?.message}</p>
-										<button type='submit' disabled={errors.userid}>
-											변경 완료
-										</button>
-										<button type='button' onClick={(event) => toggleEdit(event, 'userid')}>
-											취소
-										</button>
-									</div>
-								) : (
-									<div>
-										<span>{UserInfo.userid}</span>
-										<button type='button' onClick={(event) => toggleEdit(event, 'userid')}>
-											변경
-										</button>
-									</div>
-								)}{' '}
-							</form>
-						</div>
-						<div>
-							<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
-								<label>비밀번호:</label>
-								{isEditing.password ? (
-									<div>
-										<input
-											type='password'
-											name='password'
-											{...register('password', {
-												required: '영문, 숫자, 특수문자를 조합해서 입력해주세요. (8-16자)',
-												pattern: {
-													value: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!])[A-Za-z\d@#$%^&+=!]{8,16}$/,
-													message: '영문, 숫자, 특수문자를 조합해서 입력해주세요. (8-16자)',
-												},
-											})}
-										/>
-										<p>{errors.password?.message}</p>
-										<button type='submit' disabled={errors.password}>
-											변경 완료
-										</button>
-										<button type='button' onClick={(event) => toggleEdit(event, 'password')}>
-											취소
-										</button>
-									</div>
-								) : (
-									<div>
-										<span>비번비번</span>
-										<button type='button' onClick={(event) => toggleEdit(event, 'password')}>
-											변경
-										</button>
-									</div>
-								)}{' '}
-							</form>
-						</div>
-						<div>
-							<form onSubmit={handleSubmit(submitUpdateUserInfo)}>
-								<label>이메일:</label>
-								{isEditing.email ? (
-									<div>
-										<input
-											type='text'
-											name='email'
-											{...register('email', {
-												value: UserInfo.email,
-												required: '이메일 주소를 정확히 입력해주세요.',
-												pattern: {
-													value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/,
-													message: '이메일 주소를 정확히 입력해주세요.',
-												},
-											})}
-										/>
-										<p>{errors.email?.message}</p>
-										<button type='submit' disabled={errors.email}>
-											변경 완료
-										</button>
-										<button type='button' onClick={(event) => toggleEdit(event, 'email')}>
-											취소
-										</button>
-									</div>
-								) : (
-									<div>
-										<span>{UserInfo.email}</span>
-										<button type='button' onClick={(event) => toggleEdit(event, 'email')}>
-											변경
-										</button>
-									</div>
-								)}{' '}
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</__MyPageWrapper>
+				</__MyPageWrapper>
+			)}
+		</>
 	);
 }
 

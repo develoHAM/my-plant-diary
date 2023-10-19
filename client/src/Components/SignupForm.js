@@ -29,6 +29,7 @@ export default function SignupForm() {
 		if (result) {
 			dispatch(loginAction.login(userInfo));
 			setSignupSuccess(true);
+			console.log('UserState', UserState);
 		} else {
 			setSignupError(message);
 		}
@@ -42,7 +43,7 @@ export default function SignupForm() {
 		<>
 			{signupSuccess ? (
 				<>
-					<h1>회원가입을 축하드립니다. {UserState.userInfo.name} 님</h1>
+					<h1>회원가입을 축하드립니다. {UserState.account.name}님</h1>
 					<Link to={'/'}>홈으로 이동</Link>
 				</>
 			) : (

@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+dotenv.config();
+const env = process.env;
+
 const UserModel = (sequelize, Sequelize) => {
 	return sequelize.define('user', {
 		id: {
@@ -24,6 +28,7 @@ const UserModel = (sequelize, Sequelize) => {
 		},
 		profile_pic: {
 			type: Sequelize.DataTypes.STRING(),
+			defaultValue: env.DEFAULT_PROFILE_IMG_SRC,
 		},
 	});
 };

@@ -1,24 +1,21 @@
+import dotenv from 'dotenv';
+dotenv.config();
+const env = process.env;
+
 const Config = {
 	development: {
-		username: 'admin',
-		password: '12341234',
-		database: 'my-plant-diary',
-		host: 'my-plant-diary.crlsht4xwcw6.ap-northeast-2.rds.amazonaws.com',
-		dialect: 'mysql',
-	},
-	test: {
-		username: 'root',
-		password: null,
-		database: 'database_test',
-		host: '127.0.0.1',
-		dialect: 'mysql',
+		username: env.MYSQL_USERNAME,
+		password: env.MYSQL_PASSWORD,
+		database: env.MYSQL_DATABASE,
+		host: env.MYSQL_HOST,
+		dialect: env.MYSQL_DIALECT,
 	},
 	production: {
-		username: 'root',
-		password: null,
-		database: 'database_production',
-		host: '127.0.0.1',
-		dialect: 'mysql',
+		username: env.RDS_USERNAME,
+		password: env.RDS_PASSWORD,
+		database: env.RDS_DATABASE,
+		host: env.RDS_HOST,
+		dialect: env.RDS_DIALECT,
 	},
 };
 
