@@ -233,6 +233,7 @@ controller.authenticate = async (req, res) => {
 		console.log('posts', posts);
 		res.send({ result: true, userInfo: data, message: '인증성공' });
 	} catch (error) {
+		console.log(error);
 		res.send({ result: false, message: '오류 발생' });
 	}
 };
