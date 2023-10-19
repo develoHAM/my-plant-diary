@@ -66,7 +66,12 @@ const uploadImageMulterMiddleware = upload.single('file');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+	cors({
+		origin: 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app',
+		credentials: true,
+	})
+);
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
 app.use('/user', uploadImageMulterMiddleware, userRouter);
