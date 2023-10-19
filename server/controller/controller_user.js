@@ -47,8 +47,6 @@ controller.signup = async (req, res) => {
 				userid: userInfo.userid,
 			};
 			const token = jwt.sign(payload, SECRET);
-			res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-			res.header('Access-Control-Allow-Credentials', 'true');
 			res.cookie('login_token', token, {
 				httpOnly: true,
 				maxAge: 360000000,
