@@ -68,7 +68,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
 	cors({
-		origin: 'http://localhost:3000',
+		origin: 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app/',
 		credentials: true,
 	})
 );
