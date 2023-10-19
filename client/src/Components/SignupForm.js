@@ -47,7 +47,7 @@ export default function SignupForm() {
 		<>
 			{signupSuccess ? (
 				<>
-					<h1>회원가입을 축하드립니다. {UserState.account.name}님</h1>
+					<h1>회원가입을 축하드립니다. {UserState.userInfo.account.name}님</h1>
 					<Link to={'/'}>홈으로 이동</Link>
 				</>
 			) : (
