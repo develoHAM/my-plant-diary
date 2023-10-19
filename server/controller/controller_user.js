@@ -200,20 +200,20 @@ controller.updateprofilepic = async (req, res) => {
 };
 
 controller.authenticate = async (req, res) => {
-	const token = req.cookies.login_token;
-	const userInfo = req.body;
-
-	if (!token) {
-		res.send({ result: false, message: '쿠키 없음' });
-		return;
-	}
-
-	if (!userInfo) {
-		res.send({ result: false, message: '사용자 정보 없음' });
-		return;
-	}
-
 	try {
+		const token = req.cookies.login_token;
+		const userInfo = req.body;
+
+		if (!token) {
+			res.send({ result: false, message: '쿠키 없음' });
+			return;
+		}
+
+		if (!userInfo) {
+			res.send({ result: false, message: '사용자 정보 없음' });
+			return;
+		}
+
 		const { id, userid } = jwt.verify(token, SECRET);
 		const user = await Model.Users.findOne({
 			where: {
