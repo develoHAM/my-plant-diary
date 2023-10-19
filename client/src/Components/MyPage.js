@@ -28,7 +28,7 @@ export default function MyPage() {
 		console.log('UserInfo', UserInfo);
 		const authenticateUser = async () => {
 			const response = await axios.post(
-				'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/authenticate',
+				'my-plant-diary-server:8000/user/authenticate',
 				{ userInfo: UserInfo },
 				{ withCredentials: true }
 			);
@@ -53,7 +53,7 @@ export default function MyPage() {
 		formData.append('file', file);
 		const { data } = await axios({
 			method: 'POST',
-			url: 'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/updateprofilepic',
+			url: 'my-plant-diary-server:8000/user/updateprofilepic',
 			data: formData,
 			headers: {
 				'Content-Type': 'multipart/form-data',
@@ -74,11 +74,7 @@ export default function MyPage() {
 		const payload = { ...UserInfo };
 		payload[updateTarget] = watch(updateTarget);
 		console.log('payload', payload);
-		const response = await axios.post(
-			'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/update',
-			payload,
-			{ withCredentials: true }
-		);
+		const response = await axios.post('my-plant-diary-server:8000/user/update', payload, { withCredentials: true });
 		const { result, message, userInfo } = response.data;
 		if (result) {
 			dispatch(loginAction.login(userInfo));

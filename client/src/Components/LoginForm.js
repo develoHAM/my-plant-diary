@@ -20,13 +20,9 @@ export default function LoginForm() {
 	} = useForm();
 
 	const login = async (data) => {
-		const response = await Axios.post(
-			'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/signin',
-			data,
-			{
-				withCredentials: true,
-			}
-		);
+		const response = await Axios.post('my-plant-diary-server:8000/user/signin', data, {
+			withCredentials: true,
+		});
 		const { result, message, userInfo } = response.data;
 		console.log('message', message);
 		if (result) {
