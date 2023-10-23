@@ -58,8 +58,7 @@ const S3Storage = multers3({
 	],
 });
 
-const upload =
-	process.env.NODE_ENV == 'development' ? multer({ storage: localStorage }) : multer({ storage: S3Storage });
+const upload = env.NODE_ENV == 'development' ? multer({ storage: localStorage }) : multer({ storage: S3Storage });
 
 const uploadImageMulterMiddleware = upload.single('file');
 
@@ -68,7 +67,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
 	cors({
-		origin: 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app',
+		origin: env.CLIENT_DOMAIN,
 		credentials: true,
 	})
 );

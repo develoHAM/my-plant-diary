@@ -8,6 +8,11 @@ import { Link, useNavigate } from 'react-router-dom';
 // styled components
 import { __SignUpButton } from '../styles/components/welcome';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const env = process.env;
+
 export default function SignupForm() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -22,13 +27,9 @@ export default function SignupForm() {
 	} = useForm({ mode: 'onChange' });
 
 	const signup = async (data) => {
-		const response = await Axios.post(
-			'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/signup',
-			data,
-			{
-				withCredentials: true,
-			}
-		);
+		const response = await Axios.post(`${env.SERVER_DOMAIN}/user/signup`, data, {
+			withCredentials: true,
+		});
 		const { result, message, userInfo } = response.data;
 		if (result) {
 			dispatch(loginAction.login(userInfo));

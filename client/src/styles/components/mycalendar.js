@@ -16,7 +16,6 @@ export const __MyCalendarContainer = styled.div`
 `;
 
 export const __Calendar = styled.div`
-	/* flex-basis: 20%; */
 	padding: 0 2%;
 `;
 

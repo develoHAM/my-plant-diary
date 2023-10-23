@@ -21,8 +21,6 @@ const S3 = new AWS.S3({
 });
 
 controller.signup = async (req, res) => {
-	// res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-	// res.header('Access-Control-Allow-Credentials', 'true');
 	try {
 		const { userid, password, name, email } = req.body;
 		const duplicatedUserid = await Model.Users.findOne({
@@ -60,8 +58,6 @@ controller.signup = async (req, res) => {
 };
 
 controller.signin = async (req, res) => {
-	// res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-	// res.header('Access-Control-Allow-Credentials', 'true');
 	try {
 		const { userid, password } = req.body;
 		const user = await Model.Users.findOne({
@@ -95,8 +91,6 @@ controller.signin = async (req, res) => {
 };
 
 controller.update = async (req, res) => {
-	// res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-	// res.header('Access-Control-Allow-Credentials', 'true');
 	try {
 		const { id, userid, name, email, password, profile_pic } = req.body;
 		const pw = bcrypt.hashSync(password, SALT);
@@ -144,8 +138,6 @@ controller.update = async (req, res) => {
 };
 
 controller.updateprofilepic = async (req, res) => {
-	// res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-	// res.header('Access-Control-Allow-Credentials', 'true');
 	try {
 		const path = req.file.path || req.file.transforms[0].location;
 		console.log('path', path);
@@ -206,8 +198,6 @@ controller.updateprofilepic = async (req, res) => {
 };
 
 controller.authenticate = async (req, res) => {
-	// res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-	// res.header('Access-Control-Allow-Credentials', 'true');
 	try {
 		const token = req.cookies.login_token;
 		const userInfo = req.body;
@@ -247,8 +237,6 @@ controller.authenticate = async (req, res) => {
 };
 
 controller.submitpost = async (req, res) => {
-	// res.header('Access-Control-Allow-Origin', 'https://web-my-plant-diary-jvpb2alnwnvncg.sel5.cloudtype.app');
-	// res.header('Access-Control-Allow-Credentials', 'true');
 	const path = req.file.path || req.file.transforms[0].location;
 	const token = req.cookies.login_token;
 	console.log('req.file', req.file);

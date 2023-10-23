@@ -8,6 +8,11 @@ import { useState } from 'react';
 // styled components
 import { __Logo } from '../styles/components/welcome';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const env = process.env;
+
 export default function LoginForm() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -20,13 +25,9 @@ export default function LoginForm() {
 	} = useForm();
 
 	const login = async (data) => {
-		const response = await Axios.post(
-			'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/signin',
-			data,
-			{
-				withCredentials: true,
-			}
-		);
+		const response = await Axios.post(`${env.SERVER_DOMAIN}/user/signin`, data, {
+			withCredentials: true,
+		});
 		const { result, message, userInfo } = response.data;
 		console.log('message', message);
 		if (result) {

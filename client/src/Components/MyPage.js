@@ -6,6 +6,11 @@ import { loginAction } from '../store';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const env = process.env;
+
 export default function MyPage() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -28,7 +33,7 @@ export default function MyPage() {
 		console.log('UserInfo', UserInfo);
 		const authenticateUser = async () => {
 			const response = await axios.post(
-				'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/authenticate',
+				`${env.SERVER_DOMAIN}/user/authenticate`,
 				{ userInfo: UserInfo },
 				{ withCredentials: true }
 			);
@@ -53,7 +58,7 @@ export default function MyPage() {
 		formData.append('file', file);
 		const { data } = await axios({
 			method: 'POST',
-			url: 'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/updateprofilepic',
+			url: `${env.SERVER_DOMAIN}/user/updateprofilepic`,
 			data: formData,
 			headers: {
 				'Content-Type': 'multipart/form-data',
@@ -74,11 +79,7 @@ export default function MyPage() {
 		const payload = { ...UserInfo };
 		payload[updateTarget] = watch(updateTarget);
 		console.log('payload', payload);
-		const response = await axios.post(
-			'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/update',
-			payload,
-			{ withCredentials: true }
-		);
+		const response = await axios.post(`${env.SERVER_DOMAIN}/user/update`, payload, { withCredentials: true });
 		const { result, message, userInfo } = response.data;
 		if (result) {
 			dispatch(loginAction.login(userInfo));
@@ -275,137 +276,3 @@ export default function MyPage() {
 		</>
 	);
 }
-
-/* 
-			<div>
-				<div>
-					{isEditing.name ? (
-						<>
-							<form onSubmit={handleSubmit(updateName)}>
-								<input {...register('name', { required: '필수임다' })} />
-								<button type='submit'>수정완료</button>
-							</form>
-							<div>{errors.name?.message}</div>
-							<button onClick={() => setIsEditing({ ...isEditing, name: false })}>취소</button>
-						</>
-					) : (
-						<>
-							<p>{name}</p>
-							<button onClick={() => setIsEditing({ ...isEditing, name: true })}>변경</button>
-						</>
-					)}
-				</div>
-				<div>
-					{isEditing.email ? (
-						<>
-							<form onSubmit={handleSubmit(updateEmail)}>
-								<input {...register('email', { required: '필수임다' })} />
-								<button type='submit'>수정완료</button>
-							</form>
-							<div>{errors.email?.message}</div>
-							<button onClick={() => setIsEditing({ ...isEditing, email: false })}>취소</button>
-						</>
-					) : (
-						<>
-							<p>{email}</p>
-							<button onClick={() => setIsEditing({ ...isEditing, email: true })}>변경</button>
-						</>
-					)}
-				</div>
-				<div>
-					{isEditing.userid ? (
-						<>
-							<form onSubmit={handleSubmit(updateUserid)}>
-								<input {...register('userid', { required: '필수임다' })} />
-								<button type='submit'>수정완료</button>
-							</form>
-							<div>{errors.userid?.message}</div>
-							<button onClick={() => setIsEditing({ ...isEditing, userid: false })}>취소</button>
-						</>
-					) : (
-						<>
-							<p>{userid}</p>
-							<button onClick={() => setIsEditing({ ...isEditing, userid: true })}>변경</button>
-						</>
-					)}
-				</div>
-				<div>
-					{isEditing.password ? (
-						<>
-							<form onSubmit={handleSubmit(updatePassword)}>
-								<input {...register('password', { required: '필수임다' })} />
-								<button type='submit'>수정완료</button>
-							</form>
-							<div>{errors.password?.message}</div>
-							<button onClick={() => setIsEditing({ ...isEditing, password: false })}>취소</button>
-						</>
-					) : (
-						<>
-							<p>{password}</p>
-							<button onClick={() => setIsEditing({ ...isEditing, password: true })}>변경</button>
-						</>
-					)}
-				</div>
-			</div>
-*/
-
-/* 
-	const [isEditing, setIsEditing] = useState({ name: false, email: false, userid: false, password: false });
-	
-	const updateName = async (data) => {
-		const newUserInfo = {
-			id,
-			name: data.name,
-			userid,
-			email,
-			password,
-		};
-		const response = await axios.post('http://localhost:8000/user/update', newUserInfo, { withCredentials: true });
-		const { result, message, userInfo } = response.data;
-		dispatch(loginAction.login(userInfo));
-		setIsEditing({ ...isEditing, name: false });
-	};
-	const updateEmail = async (data) => {
-		const newUserInfo = {
-			id,
-			name,
-			userid,
-			email: data.email,
-			password,
-		};
-		const response = await axios.post('http://localhost:8000/user/update', newUserInfo, { withCredentials: true });
-		const { result, message, userInfo } = response.data;
-		dispatch(loginAction.login(userInfo));
-		setIsEditing({ ...isEditing, email: false });
-	};
-	const updateUserid = async (data) => {
-		const newUserInfo = {
-			id,
-			name,
-			userid: data.userid,
-			email,
-			password,
-		};
-		const response = await axios.post('http://localhost:8000/user/update', newUserInfo, {
-			withCredentials: true,
-		});
-		const { result, message, userInfo } = response.data;
-		dispatch(loginAction.login(userInfo));
-		setIsEditing({ ...isEditing, userid: false });
-	};
-	const updatePassword = async (data) => {
-		const newUserInfo = {
-			id,
-			name,
-			userid,
-			email,
-			password: password,
-		};
-		const response = await axios.post('http://localhost:8000/user/update', newUserInfo, {
-			withCredentials: true,
-		});
-		const { result, message, userInfo } = response.data;
-		dispatch(loginAction.login(userInfo));
-		setIsEditing({ ...isEditing, password: false });
-	};
-*/

@@ -5,6 +5,10 @@ import { loginAction } from '../store';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import moment from 'moment';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const env = process.env;
 
 import {
 	__MyCalendarWrapper,
@@ -17,8 +21,6 @@ import {
 } from '../styles/components/mycalendar';
 import { useForm } from 'react-hook-form';
 
-let isInitial = true; // avoid-first-rendering
-
 export default function MyCalendar() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -30,13 +32,11 @@ export default function MyCalendar() {
 	const postsForDate = UserPosts?.filter((post) => moment(value).format('YYYY-MM-DD') == post.date);
 	console.log('postsForDate', postsForDate);
 
-	// UserState.userInfo.posts?.map((post) => post.date);
-
 	useEffect(() => {
 		console.log('UserState', UserState);
 		const authenticateUser = async () => {
 			const response = await axios.post(
-				'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/authenticate',
+				`${env.SERVER_DOMAIN}/user/authenticate`,
 				{ userInfo: UserState.userInfo },
 				{ withCredentials: true }
 			);
@@ -73,7 +73,7 @@ export default function MyCalendar() {
 		formData.append('file', file);
 		const response = await axios({
 			method: 'POST',
-			url: 'https://port-0-my-plant-diary-server-jvpb2alnwnvncg.sel5.cloudtype.app/user/submitpost',
+			url: `${env.SERVER_DOMAIN}/user/submitpost`,
 			data: formData,
 			headers: {
 				'Content-Type': 'multipart/form-data',

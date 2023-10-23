@@ -1,8 +1,6 @@
 import express from 'express';
 import controller from '../controller/controller_user.js';
 const router = express.Router();
-import multer from 'multer';
-const upload = multer();
 
 router.post('/signup', controller.signup);
 router.post('/signin', controller.signin);
